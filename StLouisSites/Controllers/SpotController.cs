@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using StLouisSites.Data;
+using StLouisSites.Data.Repos;
 using StLouisSites.Models;
 using StLouisSites.ViewModels.Spot;
 
@@ -11,35 +12,34 @@ namespace StLouisSites.Controllers
 {
     public class SpotController : Controller
     {
-        private ISpotRepository spotRepository = RepositoryFactory.GetSpotRepository();
+        private RepositoryFactory repositoryFactory;
 
-        private ApplicationDbContext context;
-
-        public SpotController(ApplicationDbContext context)
+        public SpotController(RepositoryFactory repositoryFactory)
         {
-            this.context = context;
+            this.repositoryFactory = repositoryFactory;
         }
 
         public IActionResult Index()
         {
-            List<Spot> spots = context.Spots.ToList();
-            List<SpotListItemViewModel> viewModelSpots = SpotListItemViewModel.GetSpotListItemsFromSpot(spots);
-            return View(viewModelSpots);
+            List<SpotListItemViewModel> spots = SpotListItemViewModel.GetSpots(repositoryFactory);
+            return View(spots);
         }
 
         [HttpGet]
         public IActionResult Create()
         {
+            //SpotCreateViewModel model = new SpotCreateViewModel(repositoryFactory);
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(SpotCreateViewModel createSpot)
+        public IActionResult Create(SpotCreateViewModel model)
         {
-            Spot spot = createSpot.Persist();
-            context.Add(spot);
-            context.SaveChanges();
-            return RedirectToAction(nameof (Index));
+            if (!ModelState.IsValid)
+                return View(model);
+
+            model.Persist(repositoryFactory);
+            return RedirectToAction(actionName: nameof(Index));
         }
     }
 }

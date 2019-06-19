@@ -13,6 +13,9 @@ using Microsoft.EntityFrameworkCore;
 using StLouisSites.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StLouisSites.Data.Repos;
+using System.Reflection;
+
 
 namespace StLouisSites
 {
@@ -23,6 +26,7 @@ namespace StLouisSites
             Configuration = configuration;
         }
 
+       
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -36,11 +40,17 @@ namespace StLouisSites
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseLazyLoadingProxies().UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
+            services.AddScoped<RepositoryFactory>();
             services.AddDefaultIdentity<IdentityUser>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            Assembly.GetExecutingAssembly().GetTypes()
+                       .Where(t => t.Namespace?.StartsWith("StLouisSites.ViewModels") ?? false)
+                       .ToList()
+                       .ForEach(T => services.AddScoped(T));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

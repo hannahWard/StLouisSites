@@ -10,6 +10,7 @@ namespace StLouisSites.Data
     public class ApplicationDbContext : IdentityDbContext
     {
         public DbSet<Spot> Spots { get; set; }
+        public DbSet<SpotRating> SpotRatings { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
