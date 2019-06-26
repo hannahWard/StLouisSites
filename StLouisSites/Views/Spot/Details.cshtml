@@ -1,0 +1,28 @@
+﻿@model IEnumerable<StLouisSites.Models.SpotRating>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>@ViewBag.Name</h1>
+
+<h2>@ViewBag.Description</h2>
+
+<h3>@Html.ActionLink("Rate", "Create", "SpotRating", new { spotId = ViewBag.Id })</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Ratings</th>
+            <th>Reviews</th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model)
+{
+        <tr>
+            <td>@Html.DisplayFor(modelItem => item.Rating)</td>
+            <td>@Html.DisplayFor(modelItem => item.Review)</td>
+        </tr>
+}
+    </tbody>
+</table>

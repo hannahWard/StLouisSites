@@ -11,6 +11,13 @@ namespace StLouisSites.Controllers
 {
     public class SpotRatingController : Controller
     {
+        private RepositoryFactory repositoryFactory;
+
+        public SpotRatingController(RepositoryFactory repositoryFactory)
+        {
+            this.repositoryFactory = repositoryFactory;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -28,7 +35,7 @@ namespace StLouisSites.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            model.Persist();
+            model.Persist(repositoryFactory);
             return RedirectToAction(controllerName: nameof(Spot), actionName: nameof(Index));
         }
     }

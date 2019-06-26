@@ -28,7 +28,6 @@ namespace StLouisSites.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            //SpotCreateViewModel model = new SpotCreateViewModel(repositoryFactory);
             return View();
         }
 
@@ -40,6 +39,46 @@ namespace StLouisSites.Controllers
 
             model.Persist(repositoryFactory);
             return RedirectToAction(actionName: nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int spotId)
+        {
+            return View(new SpotEditViewModel(spotId, repositoryFactory));
+        }
+
+        [HttpPost]
+        public IActionResult Edit(int spotId, SpotEditViewModel spot)
+        {
+            if (!ModelState.IsValid)
+                return View(spot);
+
+            spot.Update(spotId, repositoryFactory);
+            return RedirectToAction(actionName: nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Details(int spotId)
+        {
+            List<SpotRating> spotRatings = repositoryFactory
+                .GetSpotRatingRepository()
+                .GetModels()
+                .Where(rating => rating.SpotId == spotId)
+                .ToList();
+
+            List<Spot> spots = repositoryFactory
+                .GetSpotRepository()
+                .GetModels()
+                .Where(s => s.Id == spotId)
+                .ToList();
+            foreach (var spot in spots)
+            {
+                ViewBag.Name = spot.Name;
+                ViewBag.Description = spot.Description;
+            }
+
+            ViewBag.Id = spotId;
+            return View(spotRatings);
         }
     }
 }

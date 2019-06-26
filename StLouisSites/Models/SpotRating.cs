@@ -9,6 +9,7 @@ namespace StLouisSites.Models
     {
         public int Id { get; set; }
         public int Rating { get; set; }
+        public string Review { get; set; }
         public int SpotId { get; set; }
     }
 }

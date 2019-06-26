@@ -10,32 +10,20 @@ namespace StLouisSites.ViewModels.SpotRating
 {
     public class SpotRatingCreateViewModel
     {
-        private string ratings = "12345";
-        private readonly RepositoryFactory repositoryFactory;
-
+      
         public int Id { get; set; }
         public int Rating { get; set; }
         public int SpotId { get; set; }
-        public SelectList Ratings { get { return GetRatings(); } }
+        public string Review { get; set; }
 
-       
-        public SpotRatingCreateViewModel(RepositoryFactory repositoryFactory)
-        {
-            this.repositoryFactory = repositoryFactory;
-        }
 
-        private SelectList GetRatings()
-        {
-            var ratingSelectListItems = ratings.Select(r => new SelectListItem(r.ToString(), r.ToString()));
-            return new SelectList(ratingSelectListItems);
-        }
-
-        internal void Persist()
+        internal void Persist(RepositoryFactory repositoryFactory)
         {
             Models.SpotRating rating = new Models.SpotRating
             {
                 SpotId = this.SpotId,
-                Rating = this.Rating
+                Rating = this.Rating,
+                Review = this.Review
             };
             repositoryFactory.GetSpotRatingRepository().Save(rating);
         }
