@@ -42,18 +42,18 @@ namespace StLouisSites.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int spotId)
+        public IActionResult Edit(int id)
         {
-            return View(new SpotEditViewModel(spotId, repositoryFactory));
+            return View(new SpotEditViewModel(id, repositoryFactory));
         }
 
         [HttpPost]
-        public IActionResult Edit(int spotId, SpotEditViewModel spot)
+        public IActionResult Edit(int id, SpotEditViewModel spot)
         {
             if (!ModelState.IsValid)
                 return View(spot);
 
-            spot.Update(spotId, repositoryFactory);
+            spot.Update(id, repositoryFactory);
             return RedirectToAction(actionName: nameof(Index));
         }
 

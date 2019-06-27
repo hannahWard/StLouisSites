@@ -9,9 +9,6 @@ namespace StLouisSites.ViewModels.Spot
 {
     public class SpotEditViewModel
     {
-
-        
-
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Please enter Name")]
@@ -31,20 +28,24 @@ namespace StLouisSites.ViewModels.Spot
 
         public SpotEditViewModel(int spotId, RepositoryFactory repositoryFactory)
         {
-            this.Id = spotId;
+            Models.Spot spot = repositoryFactory.GetSpotRepository().GetById(spotId);
+            this.Name = spot.Name;
+            this.Description = spot.Description;
+            this.Address = spot.Address;
+            this.County = spot.County;
         }
 
-        public void Update(int spotId, RepositoryFactory repositoryFactory)
+        public void Update(int id, RepositoryFactory repositoryFactory)
         {
             Models.Spot spot = new Models.Spot
             {
-                Id = spotId,
+                Id = id,
                 Name = this.Name,
                 Description = this.Description,
                 Address = this.Address,
                 County = this.County
             };
-            repositoryFactory.GetSpotRepository().Save(spot);
+            repositoryFactory.GetSpotRepository().Update(spot);
         }
         //public void Update(int spotId, RepositoryFactory repositoryFactory)
         //{
