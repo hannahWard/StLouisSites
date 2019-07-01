@@ -28,7 +28,8 @@ namespace StLouisSites.Controllers
         [HttpGet]
         public IActionResult Create()
         {
-            return View();
+            SpotCreateViewModel model = new SpotCreateViewModel(repositoryFactory);
+            return View(model);
         }
 
         [HttpPost]

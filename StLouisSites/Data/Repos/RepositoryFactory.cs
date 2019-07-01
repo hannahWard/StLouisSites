@@ -25,5 +25,10 @@ namespace StLouisSites.Data
         {
             return new Repository<Spot>(context);
         }
+
+        public IRepository<Category> GetCategoryRepository()
+        {
+            return new Repository<Category>(context);
+        }
     }
 }

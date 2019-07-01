@@ -1,4 +1,5 @@
-﻿using StLouisSites.Data;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using StLouisSites.Data;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -10,6 +11,8 @@ namespace StLouisSites.ViewModels.Spot
     public class SpotEditViewModel
     {
         public int Id { get; set; }
+        public int CategoryId { get; set; }
+        public SelectList Categories { get; set; }
 
         [Required(ErrorMessage = "Please enter Name")]
         public string Name { get; set; }
@@ -47,15 +50,12 @@ namespace StLouisSites.ViewModels.Spot
             };
             repositoryFactory.GetSpotRepository().Update(spot);
         }
-        //public void Update(int spotId, RepositoryFactory repositoryFactory)
-        //{
-        //    Models.Spot spot = repositoryFactory.GetSpotRepository().GetById(spotId);
-        //    spot.Name = this.Name;
-        //    spot.Description = this.Description;
-        //    spot.Address = this.Address;
-        //    spot.County = this.County;
-        //    spot.Id = spotId;
-        //    repositoryFactory.GetSpotRepository().Update(spot);
-        //}
+     
+        private SelectList GetCategoryList(RepositoryFactory repositoryFactory)
+        {
+            var categories = repositoryFactory.GetCategoryRepository()
+                .GetModels();
+            return new SelectList(categories, "Id", "Name", this.CategoryId);
+        }
     }
 }

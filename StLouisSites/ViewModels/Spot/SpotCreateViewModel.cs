@@ -12,6 +12,7 @@ namespace StLouisSites.ViewModels.Spot
     public class SpotCreateViewModel
     {
         public int Id { get; set; }
+        public IEnumerable<SelectListItem> Categories { get; set; }
 
         [Required(ErrorMessage = "Please enter Name")]
         public string Name { get; set; }
@@ -31,6 +32,11 @@ namespace StLouisSites.ViewModels.Spot
 
         }
 
+        public SpotCreateViewModel(RepositoryFactory repositoryFactory)
+        {
+            this.Categories = GetCategoryList(repositoryFactory);
+        }
+
         public void Persist(RepositoryFactory repositoryFactory)
         {
             Models.Spot spot = new Models.Spot
@@ -42,7 +48,13 @@ namespace StLouisSites.ViewModels.Spot
                 County = this.County
             };
             repositoryFactory.GetSpotRepository().Save(spot);
+        }
 
+        private IEnumerable<SelectListItem> GetCategoryList(RepositoryFactory repositoryFactory)
+        {
+            return repositoryFactory.GetCategoryRepository()
+                .GetModels()
+                .Select(c => new SelectListItem(c.Name, c.Id.ToString()));
         }
     }
 }
