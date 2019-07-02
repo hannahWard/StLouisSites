@@ -72,11 +72,11 @@ namespace StLouisSites.Controllers
                 .GetModels()
                 .Where(s => s.Id == spotId)
                 .ToList();
+            List<string> names = new List<string>();
             foreach (var spot in spots)
             {
                 ViewBag.Name = spot.Name;
                 ViewBag.Description = spot.Description;
-                List<string> names = new List<string>();
                 foreach (var category in spot.CategorySpots)
                 {
                     names.Add(category.Category.Name);
@@ -86,6 +86,13 @@ namespace StLouisSites.Controllers
 
             ViewBag.Id = spotId;
             return View(spotRatings);
+        }
+
+        [HttpGet]
+        public IActionResult Delete (int id)
+        {
+            repositoryFactory.GetSpotRepository().Delete(id);
+            return RedirectToAction(actionName: nameof(Index));
         }
     }
 }

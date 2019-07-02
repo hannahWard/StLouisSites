@@ -12,7 +12,6 @@ namespace StLouisSites.ViewModels.Spot
     {
         public int Id { get; set; }
 
-       
         public List<int> CategoryIds { get; set; }
         public List<Models.Category> Categories { get; set; }
 
@@ -52,14 +51,28 @@ namespace StLouisSites.ViewModels.Spot
                 Address = this.Address,
                 County = this.County
             };
-            List<Models.CategorySpot> categorySpots = CreateManyToManyRelationships(spot.Id);
+            List<Models.CategorySpot> categorySpots = CreateManyToManyRelationships(spot.Id, repositoryFactory);
             spot.CategorySpots = categorySpots;
             repositoryFactory.GetSpotRepository().Update(spot);
         }
      
-        private List<Models.CategorySpot> CreateManyToManyRelationships(int spotId)
+        private List<Models.CategorySpot> CreateManyToManyRelationships(int spotId, RepositoryFactory repositoryFactory)
         {
-            return CategoryIds.Select(catId => new Models.CategorySpot { SpotId = spotId, CategoryId = catId }).ToList();
+            List<Models.CategorySpot> categorySpots = 
+                repositoryFactory.GetCategorySpotRepository()
+                .GetModels()
+                .Where(s => s.SpotId == spotId)
+                .ToList();
+
+            foreach (var item in categorySpots)
+            {
+                repositoryFactory.GetCategorySpotRepository().DeleteManyToMany(item);
+            }
+
+            return CategoryIds
+                .Select(catId => new Models.CategorySpot { SpotId = spotId, CategoryId = catId })
+                .ToList();
+            
         }
     }
 }

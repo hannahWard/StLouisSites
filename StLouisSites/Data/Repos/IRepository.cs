@@ -12,5 +12,6 @@ namespace StLouisSites.Data.Repos
         int Save(T model);
         void Delete(int id);
         void Update(T model);
+        void DeleteManyToMany(T model);
     }
 }

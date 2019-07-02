@@ -48,5 +48,11 @@ namespace StLouisSites.Data.Repos
             context.Update(model);
             context.SaveChanges();
         }
+
+        public void DeleteManyToMany(TEntity model)
+        {
+            context.Remove(model);
+            context.SaveChanges();
+        }
     }
 }

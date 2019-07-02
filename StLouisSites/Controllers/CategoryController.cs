@@ -20,7 +20,8 @@ namespace StLouisSites.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            List<CategoryListItemViewModel> categories = CategoryListItemViewModel.GetCategories(repositoryFactory);
+            return View(categories);
         }
 
         [HttpGet]
@@ -33,7 +34,14 @@ namespace StLouisSites.Controllers
         public IActionResult Create(CategoryCreateViewModel model)
         {
             model.Persist(repositoryFactory);
-            return RedirectToAction(controllerName: nameof(Spot), actionName: nameof(Index));
+            return RedirectToAction(actionName: nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            repositoryFactory.GetCategoryRepository().Delete(id);
+            return RedirectToAction(actionName: nameof(Index));
         }
     }
 }
