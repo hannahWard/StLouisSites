@@ -76,6 +76,12 @@ namespace StLouisSites.Controllers
             {
                 ViewBag.Name = spot.Name;
                 ViewBag.Description = spot.Description;
+                List<string> names = new List<string>();
+                foreach (var category in spot.CategorySpots)
+                {
+                    names.Add(category.Category.Name);
+                }
+                ViewBag.Categories = names;
             }
 
             ViewBag.Id = spotId;

@@ -37,9 +37,12 @@
                 <span asp-validation-for="County" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Categories" class="control-label"></label>
-                <select asp-for="Categories" class="form-control" asp-items="Model.Categories"></select>
-                <span asp-validation-for="Categories" class="text-danger"></span>
+                <label asp-for="CategoryIds" class="control-label"></label>
+                @foreach (var category in Model.Categories)
+                {
+                    <label>@category.Name</label>
+                    <input type="checkbox" name="CategoryIds" value="@category.Id" />
+                }
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

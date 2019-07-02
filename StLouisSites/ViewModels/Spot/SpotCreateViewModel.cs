@@ -11,8 +11,9 @@ namespace StLouisSites.ViewModels.Spot
 {
     public class SpotCreateViewModel
     {
-        public int Id { get; set; }
-        public IEnumerable<SelectListItem> Categories { get; set; }
+        [Display(Name = "Select Categories")]
+        public List<int> CategoryIds { get; set; }
+        public List<Models.Category> Categories { get; set; }
 
         [Required(ErrorMessage = "Please enter Name")]
         public string Name { get; set; }
@@ -41,20 +42,25 @@ namespace StLouisSites.ViewModels.Spot
         {
             Models.Spot spot = new Models.Spot
             {
-                Id = this.Id,
                 Name = this.Name,
                 Description = this.Description,
                 Address = this.Address,
                 County = this.County
             };
+            List<Models.CategorySpot> categorySpots = CreateManyToManyRelationships(spot.Id);
+            spot.CategorySpots = categorySpots;
             repositoryFactory.GetSpotRepository().Save(spot);
         }
 
-        private IEnumerable<SelectListItem> GetCategoryList(RepositoryFactory repositoryFactory)
+        private List<Models.Category> GetCategoryList(RepositoryFactory repositoryFactory)
         {
             return repositoryFactory.GetCategoryRepository()
-                .GetModels()
-                .Select(c => new SelectListItem(c.Name, c.Id.ToString()));
+                .GetModels().ToList();
+        }
+
+        private List<Models.CategorySpot> CreateManyToManyRelationships(int spotId)
+        {
+            return CategoryIds.Select(catId => new Models.CategorySpot { SpotId = spotId, CategoryId = catId }).ToList();
         }
     }
 }
